@@ -198,5 +198,14 @@ Route::middleware(['userlogin'])->group(function () {
     Route::get('/admin/data-label/data', [Mina2CooisController::class, 'data'])->name('mina2coois.data');
     Route::post('/admin/data-label/import', [Mina2CooisController::class, 'import'])->name('mina2coois.import');
     Route::get('admin/mina2coois/status-summary', [Mina2CooisController::class, 'statusSummary'])->name('mina2coois.statusSummary');
+
+    // MRP Controller
+    Route::prefix('admin/mrp-ctrlr')->group(function() {
+        Route::get('/', [\App\Http\Controllers\Admin\MrpCtrlrController::class, 'index'])->name('mrpctrlr.index');
+        Route::get('/data', [\App\Http\Controllers\Admin\MrpCtrlrController::class, 'data'])->name('mrpctrlr.data');
+        Route::post('/store', [\App\Http\Controllers\Admin\MrpCtrlrController::class, 'store'])->name('mrpctrlr.store');
+        Route::post('/update/{MRP_CTRL}/{WRK_CNTR}', [\App\Http\Controllers\Admin\MrpCtrlrController::class, 'update'])->name('mrpctrlr.update');
+        Route::post('/destroy/{MRP_CTRL}/{WRK_CNTR}', [\App\Http\Controllers\Admin\MrpCtrlrController::class, 'destroy'])->name('mrpctrlr.destroy');
+    });
 });
 
