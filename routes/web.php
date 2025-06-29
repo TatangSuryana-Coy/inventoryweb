@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\{
     BarangController,
@@ -13,7 +14,8 @@ use App\Http\Controllers\Admin\{
     LoginController,
     MerkController,
     SatuanController,
-    PartLabelController
+    PartLabelController,
+    MrpCtrlrController
 };
 use App\Http\Controllers\Master\{
     AksesController,
@@ -193,19 +195,22 @@ Route::middleware(['userlogin'])->group(function () {
         Route::delete('/destroy/{matnr}', [PartLabelController::class, 'destroy'])->name('MasterLabel.destroy');
         Route::post('/import', [PartLabelController::class, 'import'])->name('MasterLabel.import');
     });
-    
+
+    // Data Label (COOIS)
     Route::get('/admin/data-label', [Mina2CooisController::class, 'index'])->name('mina2coois.index');
     Route::get('/admin/data-label/data', [Mina2CooisController::class, 'data'])->name('mina2coois.data');
     Route::post('/admin/data-label/import', [Mina2CooisController::class, 'import'])->name('mina2coois.import');
-    Route::get('admin/mina2coois/status-summary', [Mina2CooisController::class, 'statusSummary'])->name('mina2coois.statusSummary');
+    Route::get('/admin/mina2coois/status-summary', [Mina2CooisController::class, 'statusSummary'])->name('mina2coois.statusSummary');
 
-    // MRP Controller
-    Route::prefix('admin/mrp-ctrlr')->group(function() {
-        Route::get('/', [\App\Http\Controllers\Admin\MrpCtrlrController::class, 'index'])->name('mrpctrlr.index');
-        Route::get('/data', [\App\Http\Controllers\Admin\MrpCtrlrController::class, 'data'])->name('mrpctrlr.data');
-        Route::post('/store', [\App\Http\Controllers\Admin\MrpCtrlrController::class, 'store'])->name('mrpctrlr.store');
-        Route::post('/update/{MRP_CTRL}/{WRK_CNTR}', [\App\Http\Controllers\Admin\MrpCtrlrController::class, 'update'])->name('mrpctrlr.update');
-        Route::post('/destroy/{MRP_CTRL}/{WRK_CNTR}', [\App\Http\Controllers\Admin\MrpCtrlrController::class, 'destroy'])->name('mrpctrlr.destroy');
+    // MRP Controller (MRP Ctrlr)
+    Route::prefix('admin/mrp-ctrlr')->name('mrpctrlr.')->group(function() {
+        Route::get('/', [MrpCtrlrController::class, 'index'])->name('index');
+        Route::get('/data', [MrpCtrlrController::class, 'data'])->name('data');
+        Route::post('/store', [MrpCtrlrController::class, 'store'])->name('store');
+        Route::post('/update/{MRP_CTRL}/{WRK_CNTR}', [MrpCtrlrController::class, 'update'])->name('update');
+        Route::post('/destroy/{MRP_CTRL}/{WRK_CNTR}', [MrpCtrlrController::class, 'destroy'])->name('destroy');
+        Route::post('/import', [MrpCtrlrController::class, 'import'])->name('import');
     });
+
 });
 

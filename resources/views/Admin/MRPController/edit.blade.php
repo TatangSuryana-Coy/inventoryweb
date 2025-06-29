@@ -25,6 +25,7 @@
                     <label>PLANT</label>
                     <input type="text" name="PLANT" class="form-control" maxlength="5" required>
                 </div>
+                <div id="errorEdit" class="alert alert-danger d-none"></div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-success" type="submit">Update</button>

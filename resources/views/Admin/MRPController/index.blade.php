@@ -9,7 +9,14 @@
         <div class="card">
             <div class="card-header justify-content-between">
                 <h3 class="card-title">Data</h3>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah">Tambah Data</button>
+                <div>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalImportExcel">
+                        Upload Excel <i class="fa fa-upload"></i>
+                    </button>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah">
+                        Tambah Data
+                    </button>
+                </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -35,13 +42,19 @@
 @include('Admin.MRPController.tambah')
 @include('Admin.MRPController.edit')
 @include('Admin.MRPController.hapus')
+@include('Admin.MRPController.import')
 @endsection
 
 @section('scripts')
 <script>
-var table;
 $(function(){
-    table = $('#table-mrpctrlr').DataTable({
+    // Setup CSRF token AJAX
+    $.ajaxSetup({
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+    });
+
+    // DataTables
+    var table = $('#table-mrpctrlr').DataTable({
         processing: true,
         serverSide: true,
         ajax: "{{ route('mrpctrlr.data') }}",
@@ -55,17 +68,33 @@ $(function(){
         ]
     });
 
-    // Tambah
+    // Tambah Data
     $('#formTambah').submit(function(e){
         e.preventDefault();
+        $('#errorTambah').addClass('d-none').html('');
         $.post("{{ route('mrpctrlr.store') }}", $(this).serialize(), function(){
             $('#modalTambah').modal('hide');
             table.ajax.reload();
             $('#formTambah')[0].reset();
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: 'Data berhasil ditambahkan!',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }).fail(function(xhr){
+            let msg = 'Terjadi kesalahan!';
+            if(xhr.responseJSON && xhr.responseJSON.errors){
+                msg = Object.values(xhr.responseJSON.errors).join('<br>');
+            } else if(xhr.responseJSON && xhr.responseJSON.message) {
+                msg = xhr.responseJSON.message;
+            }
+            $('#errorTambah').removeClass('d-none').html(msg);
         });
     });
 
-    // Edit
+    // Edit Data
     window.editData = function(row){
         $('#modalEdit input[name="MRP_CTRL_OLD"]').val(row.MRP_CTRL);
         $('#modalEdit input[name="WRK_CNTR_OLD"]').val(row.WRK_CNTR);
@@ -78,15 +107,31 @@ $(function(){
 
     $('#formEdit').submit(function(e){
         e.preventDefault();
+        $('#errorEdit').addClass('d-none').html('');
         var oldCtrl = $('#modalEdit input[name="MRP_CTRL_OLD"]').val();
         var oldWrk = $('#modalEdit input[name="WRK_CNTR_OLD"]').val();
         $.post("{{ url('admin/mrp-ctrlr/update') }}/"+oldCtrl+"/"+oldWrk, $(this).serialize(), function(){
             $('#modalEdit').modal('hide');
             table.ajax.reload();
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: 'Data berhasil diubah!',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }).fail(function(xhr){
+            let msg = 'Terjadi kesalahan!';
+            if(xhr.responseJSON && xhr.responseJSON.errors){
+                msg = Object.values(xhr.responseJSON.errors).join('<br>');
+            } else if(xhr.responseJSON && xhr.responseJSON.message) {
+                msg = xhr.responseJSON.message;
+            }
+            $('#errorEdit').removeClass('d-none').html(msg);
         });
     });
 
-    // Hapus
+    // Hapus Data
     window.deleteData = function(row){
         $('#formHapus input[name="MRP_CTRL_HAPUS"]').val(row.MRP_CTRL);
         $('#formHapus input[name="WRK_CNTR_HAPUS"]').val(row.WRK_CNTR);
@@ -103,9 +148,59 @@ $(function(){
         e.preventDefault();
         var mrp = $('#formHapus input[name="MRP_CTRL_HAPUS"]').val();
         var wrk = $('#formHapus input[name="WRK_CNTR_HAPUS"]').val();
-        $.post("{{ url('admin/mrp-ctrlr/destroy') }}/"+mrp+"/"+wrk, {_token: "{{ csrf_token() }}"}, function(){
+        $.post("{{ url('admin/mrp-ctrlr/destroy') }}/"+mrp+"/"+wrk, function(){
             $('#modalHapus').modal('hide');
             table.ajax.reload();
+        }).fail(function(xhr){
+            alert('Error: ' + xhr.responseText);
+        });
+    });
+
+    // Import Excel
+    $('#formImport').submit(function(e){
+        e.preventDefault();
+        var formData = new FormData(this);
+        var fileInput = $(this).find('input[type="file"]')[0];
+        var filePath = fileInput.value;
+        var allowedExtensions = /(\.xls|\.xlsx)$/i;
+        if(!allowedExtensions.exec(filePath)){
+            $('#errorImport').removeClass('d-none').html('Hanya file Excel (.xls, .xlsx) yang diperbolehkan!');
+            fileInput.value = '';
+            return false;
+        }
+        $('#errorImport').addClass('d-none').html('');
+        $('#btnImport .spinner-border').removeClass('d-none');
+        $('#btnImport').attr('disabled', true);
+
+        $.ajax({
+            url: "{{ route('mrpctrlr.import') }}",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(res){
+                $('#modalImportExcel').modal('hide');
+                table.ajax.reload();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: res.message || 'Import berhasil!',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+                $('#formImport')[0].reset();
+            },
+            error: function(xhr){
+                let msg = 'Import gagal!';
+                if(xhr.responseJSON && xhr.responseJSON.message) {
+                    msg = xhr.responseJSON.message;
+                }
+                $('#errorImport').removeClass('d-none').html(msg);
+            },
+            complete: function(){
+                $('#btnImport .spinner-border').addClass('d-none');
+                $('#btnImport').attr('disabled', false);
+            }
         });
     });
 });
