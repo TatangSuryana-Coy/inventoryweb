@@ -24,13 +24,6 @@
                 </div>
             </div>
             <div class="card-body">
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
-                @if(session('error'))
-                    <div class="alert alert-danger">{{ session('error') }}</div>
-                @endif
-
                 <div class="table-responsive">
                     <table id="table-coois" class="table table-bordered text-nowrap border-bottom dataTable">
                         <thead>
@@ -103,8 +96,33 @@
                 { data: 'PROD_ORDER', name: 'PROD_ORDER' },
                 { data: 'SYS_STATUS', name: 'SYS_STATUS' },
                 { data: 'CHG_BY', name: 'CHG_BY' },
-                { data: 'CHG_TIME', name: 'CHG_TIME' },
-                { data: 'CRT_TIME', name: 'CRT_TIME' },
+                { 
+                    data: 'CHG_TIME', 
+                    name: 'CHG_TIME',
+                    render: function(data) {
+                        if (!data) return '';
+                        // Ambil jam:menit:detik
+                        let time = data.toString().substring(0, 8);
+                        let [h, m, s] = time.split(':');
+                        h = parseInt(h);
+                        let ampm = h >= 12 ? 'PM' : 'AM';
+                        let hour12 = h % 12 || 12;
+                        return `${hour12}:${m} ${ampm}`;
+                    }
+                },
+                { 
+                    data: 'CRT_TIME', 
+                    name: 'CRT_TIME',
+                    render: function(data) {
+                        if (!data) return '';
+                        let time = data.toString().substring(0, 8);
+                        let [h, m, s] = time.split(':');
+                        h = parseInt(h);
+                        let ampm = h >= 12 ? 'PM' : 'AM';
+                        let hour12 = h % 12 || 12;
+                        return `${hour12}:${m} ${ampm}`;
+                    }
+                },
                 { data: 'BSC_START', name: 'BSC_START' },
                 { data: 'BSC_FINISH', name: 'BSC_FINISH' },
                 { data: 'ORD_QTY', name: 'ORD_QTY' },
@@ -137,6 +155,8 @@
             text: '{{ session('success') }}',
             timer: 2500,
             showConfirmButton: false
+        }).then(() => {
+            table.ajax.reload();
         });
     @endif
 

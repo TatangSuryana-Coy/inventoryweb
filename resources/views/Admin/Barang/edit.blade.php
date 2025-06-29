@@ -139,9 +139,9 @@
             dataType: 'json',
             data: fd,
             success: function(data) {
-                swal({
+                Swal.fire({
                     title: "Berhasil diubah!",
-                    type: "success"
+                    icon: 'success'
                 });
                 $('#Umodaldemo8').modal('toggle');
                 table.ajax.reload(null, false);

@@ -54,6 +54,38 @@ Aplikasi ini dibangun menggunakan framework **Laravel** dan mengadopsi template 
 
 ---
 
+## 🆕 Menu & Halaman Tambahan
+
+- **Data Label (Control Label)**
+  - Menampilkan dan mengelola data label produksi dari tabel `mina2_coois`
+  - Fitur import data label dari Excel
+  - Tabel dinamis dengan filter dan pencarian
+
+- **Master Part Label**
+  - CRUD data part label (tambah, edit, hapus)
+  - Import data part label dari Excel
+
+- **User Profile**
+  - Halaman profil user, edit data diri, dan ubah password
+
+- **Pengaturan Hak Akses Menu**
+  - Pengaturan akses menu per user/role secara dinamis
+
+- **Log Aktivitas**
+  - Melihat riwayat aktivitas user di aplikasi
+
+- **Halaman Import Data**
+  - Import data dari Excel untuk master dan transaksi
+  - Validasi otomatis dan notifikasi hasil import
+
+- **Halaman Export Data**
+  - Export data master/transaksi/laporan ke file Excel
+
+- **Halaman Maintenance**
+  - Menu untuk backup database dan reset data (khusus admin)
+
+---
+
 ## 🔌 Teknologi & Plugin
 
 - **Laravel 9+**
@@ -72,10 +104,11 @@ Aplikasi ini dibangun menggunakan framework **Laravel** dan mengadopsi template 
 ## ⚙️ Kebutuhan Sistem
 
 - PHP >= 8.1
-- MySQL/MariaDB
+- **SQL Server** (Microsoft SQL Server)
 - Composer >= 2.3.9
 - Node.js >= 16.14.0 & NPM >= 8.3.1
 - Web server (Apache/Nginx/XAMPP/Laragon)
+- Ekstensi PHP SQLSRV & PDO_SQLSRV aktif
 
 ---
 
@@ -87,12 +120,20 @@ Aplikasi ini dibangun menggunakan framework **Laravel** dan mengadopsi template 
     ```
     Atau download ZIP lalu ekstrak.
 
-2. **Buat Database**
-    - Buat database baru, misal: `db_inventoryweb`
+2. **Buat Database di SQL Server**
+    - Buat database baru, misal: `db_inventoryweb` di SQL Server Management Studio.
 
 3. **Konfigurasi ENV**
     - Ubah file `env.development` menjadi `.env`
-    - Atur `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` di file `.env`
+    - Atur koneksi database di file `.env`:
+      ```
+      DB_CONNECTION=sqlsrv
+      DB_HOST=localhost
+      DB_PORT=1433
+      DB_DATABASE=db_inventoryweb
+      DB_USERNAME=sa
+      DB_PASSWORD=your_password
+      ```
 
 4. **Install Dependency**
     ```
@@ -108,7 +149,7 @@ Aplikasi ini dibangun menggunakan framework **Laravel** dan mengadopsi template 
     ```
 
 6. **Import Database**
-    - Import file `db_inventoryweb.sql` dari folder `database/db` ke phpMyAdmin
+    - Import file `db_inventoryweb.sql` ke SQL Server menggunakan SQL Server Management Studio.
 
 7. **Jalankan Aplikasi**
     ```

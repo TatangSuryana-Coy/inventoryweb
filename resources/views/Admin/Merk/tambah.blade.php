@@ -63,9 +63,9 @@
                 },
                 success: function(data) {
                     $('#modaldemo8').modal('toggle');
-                    swal({
+                    Swal.fire({
                         title: "Berhasil ditambah!",
-                        type: "success"
+                        icon: 'success'
                     });
                     table.ajax.reload(null, false);
                     reset();

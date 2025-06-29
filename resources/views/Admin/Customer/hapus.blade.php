@@ -30,9 +30,9 @@
             url: "{{url('admin/customer/proses_hapus')}}/" + id,
             enctype: 'multipart/form-data',
             success: function(data) {
-                swal({
+                Swal.fire({
                     title: "Berhasil dihapus!",
-                    type: "success"
+                    icon: 'success'
                 });
                 $('#Hmodaldemo8').modal('toggle');
                 table.ajax.reload(null, false);

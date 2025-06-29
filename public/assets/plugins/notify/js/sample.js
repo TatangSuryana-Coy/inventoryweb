@@ -54,7 +54,7 @@
 function not1() {
     notif({
         msg: "<b>Success:</b> Well done Details Submitted Successfully",
-        type: "success"
+        icon: 'success'
     });
 }
 

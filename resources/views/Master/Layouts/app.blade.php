@@ -252,7 +252,8 @@ $appreance = AppreanceModel::where('user_id', '=', Session::get('user')->user_id
 
 <!-- SWEET-ALERT JS -->
 <script src="{{ url('/assets/plugins/sweet-alert/sweetalert.min.js') }}"></script>
-<script src="{{ url('/assets/js/sweet-alert.js') }}"></script>
+<!-- SWEETALERT2 JS LOCAL -->
+<script src="{{ url('/assets/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
 
 <!-- INTERNAL CHARTJS CHART JS-->
 <script src="{{ url('/assets/plugins/chart/Chart.bundle.js') }}"></script>
@@ -298,23 +299,22 @@ $appreance = AppreanceModel::where('user_id', '=', Session::get('user')->user_id
 @if (Session::get('status') == 'success')
     <script>
         $(document).ready(function() {
-            swal({
-                title: "{{ Session::get('msg') }}",
-                type: "success"
+            Swal.fire({
+                icon: 'success',
+                title: "{{ Session::get('msg') }}"
             });
         });
     </script>
 @elseif(Session::get('status') == 'error')
     <script>
         $(document).ready(function() {
-            swal({
-                title: "{{ Session::get('msg') }}",
-                type: "error"
+            Swal.fire({
+                icon: 'error',
+                title: "{{ Session::get('msg') }}"
             });
         });
     </script>
 @endif
-
 @yield('scripts')
 @yield('formTambahJS')
 @yield('formEditJS')

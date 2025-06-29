@@ -179,9 +179,9 @@
     }
 
     function validasi(judul, status) {
-        swal({
+        Swal.fire({
             title: judul,
-            type: status,
+            icon: status,
             confirmButtonText: "Iya."
         });
     }

@@ -106,18 +106,18 @@ $web = WebModel::first();
     @if(Session::get('status') == 'success')
     <script>
         $(document).ready(function() {
-            swal({
+            Swal.fire({
                 title: "{{Session::get('msg')}}",
-                type: "success"
+                icon: 'success'
             });
         });
     </script>
     @elseif(Session::get('status') == 'error')
     <script>
         $(document).ready(function() {
-            swal({
+            Swal.fire({
                 title: "{{Session::get('msg')}}",
-                type: "error"
+                icon: 'error'
             });
         });
     </script>

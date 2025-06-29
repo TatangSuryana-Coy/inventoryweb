@@ -162,9 +162,9 @@
                 '_blank'
             );
         } else {
-            swal({
+            Swal.fire({
                 title: "Yakin Print Semua Data?",
-                type: "warning",
+                icon: 'warning',
                 buttons: true,
                 dangerMode: true,
                 confirmButtonText: "Yakin",
@@ -196,9 +196,9 @@
                 '_blank'
             );
         } else {
-            swal({
+            Swal.fire({
                 title: "Yakin export PDF Semua Data?",
-                type: "warning",
+                icon: 'warning',
                 buttons: true,
                 dangerMode: true,
                 confirmButtonText: "Yakin",
@@ -222,9 +222,9 @@
     }
 
     function validasi(judul, status) {
-        swal({
+        Swal.fire({
             title: judul,
-            type: status,
+            icon: status,
             confirmButtonText: "Iya."
         });
     }
