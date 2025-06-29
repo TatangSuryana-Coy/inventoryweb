@@ -39,4 +39,23 @@ class Mina2CooisController extends Controller
             return redirect()->back()->with('error', 'Import gagal: ' . $e->getMessage());
         }
     }
+    public function statusSummary()
+    {
+        $statuses = [
+            'Open', 'Close', 'Deleted', 'Delay', 'Next Delay', 'Cost Error'
+        ];
+        $counts = DB::table('mina2_coois')
+            ->selectRaw("SYS_STATUS, COUNT(*) as total")
+            ->whereIn('SYS_STATUS', $statuses)
+            ->groupBy('SYS_STATUS')
+            ->pluck('total', 'SYS_STATUS')
+            ->toArray();
+
+        // Pastikan semua status ada, meski 0
+        $result = [];
+        foreach ($statuses as $status) {
+            $result[$status] = $counts[$status] ?? 0;
+        }
+        return response()->json($result);
+    }
 }

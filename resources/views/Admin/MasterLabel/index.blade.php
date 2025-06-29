@@ -26,13 +26,6 @@
                 </div>
             </div>
             <div class="card-body">
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
-                @if(session('error'))
-                    <div class="alert alert-danger">{{ session('error') }}</div>
-                @endif
-
                 <div class="table-responsive">
                     <table id="table-partlabel" class="table table-bordered text-nowrap border-bottom dataTable">
                         <thead>
@@ -111,7 +104,15 @@
                 { data: 'VORNR', name: 'VORNR' },
                 { data: 'EXTWG', name: 'EXTWG' },
                 { data: 'LTXA1W', name: 'LTXA1W' },
-                { data: 'ZZP_NUM_ENT', name: 'ZZP_NUM_ENT' },
+                {
+                    data: 'ZZP_NUM_ENT',
+                    name: 'ZZP_NUM_ENT',
+                    render: function(data) {
+                        if (data == null) return '';
+                        // Tampilkan 2 digit di belakang koma, hilangkan trailing nol
+                        return parseFloat(data).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+                    }
+                },
                 { data: 'BUN', name: 'BUN' },
                 { data: 'MRP', name: 'MRP' },
                 { data: 'PLANT', name: 'PLANT' },
@@ -141,7 +142,11 @@
                         $('#modalTambah').modal('hide');
                         table.ajax.reload();
                         form[0].reset();
-                        swal('Berhasil!', res.msg, 'success');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: res.msg
+                        });
                     } else {
                         $('#errorTambah').removeClass('d-none').html(res.msg || 'Gagal tambah data');
                     }
@@ -174,7 +179,7 @@
             $('#errorEdit').addClass('d-none').html('');
             $.ajax({
                 url: "{{ url('admin/ms-label/update') }}/" + matnr,
-                method: 'POST',
+                method: 'PUT',
                 data: form.serialize(),
                 success: function(res){
                     btn.attr('disabled', false);
@@ -182,7 +187,11 @@
                     if(res.status === 'success'){
                         $('#modalEdit').modal('hide');
                         table.ajax.reload();
-                        swal('Berhasil!', res.msg, 'success');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: res.msg
+                        });
                     } else {
                         $('#errorEdit').removeClass('d-none').html(res.msg || 'Gagal update data');
                     }
@@ -214,13 +223,25 @@
                     if(res.status === 'success'){
                         $('#modalHapus').modal('hide');
                         table.ajax.reload();
-                        swal('Berhasil!', res.msg, 'success');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: res.msg
+                        });
                     } else {
-                        swal('Gagal!', res.msg, 'error');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: res.msg
+                        });
                     }
                 },
                 error: function(xhr){
-                    swal('Gagal!', xhr.responseJSON?.message || 'Gagal hapus data', 'error');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: xhr.responseJSON?.message || 'Gagal hapus data'
+                    });
                 }
             });
         });
@@ -262,17 +283,17 @@
     <script>
         $(document).ready(function() {
             @if(session('import_result.success'))
-                swal(
-                    'Import Berhasil!',
-                    'Jumlah baris berhasil diimport: {{ session('import_result.count') }}',
-                    'success'
-                );
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Import Berhasil!',
+                    text: 'Jumlah baris berhasil diimport: {{ session('import_result.count') }}'
+                });
             @else
-                swal(
-                    'Import Gagal!',
-                    '{{ session('import_result.message') }}',
-                    'error'
-                );
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Import Gagal!',
+                    text: '{{ session('import_result.message') }}'
+                });
             @endif
         });
     </script>

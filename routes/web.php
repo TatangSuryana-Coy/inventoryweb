@@ -197,5 +197,6 @@ Route::middleware(['userlogin'])->group(function () {
     Route::get('/admin/data-label', [Mina2CooisController::class, 'index'])->name('mina2coois.index');
     Route::get('/admin/data-label/data', [Mina2CooisController::class, 'data'])->name('mina2coois.data');
     Route::post('/admin/data-label/import', [Mina2CooisController::class, 'import'])->name('mina2coois.import');
+    Route::get('admin/mina2coois/status-summary', [Mina2CooisController::class, 'statusSummary'])->name('mina2coois.statusSummary');
 });
 

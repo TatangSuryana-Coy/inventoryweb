@@ -177,6 +177,26 @@ memory_limit = 1024M
 
 ---
 
+## ⚠️ Catatan Penting: Storage Link
+
+Jika perintah
+```
+php artisan storage:link
+```
+tidak berjalan atau gagal:
+
+- **Pastikan** sudah menghapus folder/link `public/storage` jika sudah ada sebelumnya.
+- **Jalankan terminal/CMD sebagai Administrator** (khusus Windows).
+- **Cek permission** folder `public` dan `storage`.
+- Jika di shared hosting yang tidak support symlink, **copy manual** isi `storage/app/public` ke `public/storage`.
+- Untuk Windows, bisa juga buat symlink manual:
+  ```
+  mklink /D public\storage storage\app\public
+  ```
+- Jika masih gagal, cek pesan error di terminal untuk solusi lebih spesifik.
+
+---
+
 ## 📝 Git Workflow
 
 Untuk upload perubahan ke GitHub:

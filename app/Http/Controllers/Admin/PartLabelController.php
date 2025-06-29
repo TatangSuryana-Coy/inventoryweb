@@ -17,7 +17,10 @@ class PartLabelController extends Controller
 
     public function getdata(Request $request)
     {
-        $data = DB::table('ms_part_label');
+        $data = DB::table('ms_part_label')->get()->map(function($row) {
+            $row->ZZP_NUM_ENT = round($row->ZZP_NUM_ENT, 2);
+            return $row;
+        });
         return DataTables::of($data)
             ->addIndexColumn()
             ->addColumn('action', function($row){
