@@ -17,10 +17,10 @@
             <div class="card-header justify-content-between">
                 <h3 class="card-title">Data</h3>
                 <div>
-                    <a class="modal-effect btn btn-primary-light" data-bs-effect="effect-super-scaled" data-bs-toggle="modal" href="#modalTambah">
+                    <a class="modal-effect btn btn-primary" data-bs-effect="effect-super-scaled" data-bs-toggle="modal" href="#modalTambah">
                         Tambah Data <i class="fa fa-plus"></i>
                     </a>
-                    <a class="modal-effect btn btn-success-light" data-bs-effect="effect-super-scaled" data-bs-toggle="modal" href="#modalImportExcel">
+                    <a class="modal-effect btn btn-success" data-bs-effect="effect-super-scaled" data-bs-toggle="modal" href="#modalImportExcel">
                         Upload Excel <i class="fa fa-upload"></i>
                     </a>
                 </div>
