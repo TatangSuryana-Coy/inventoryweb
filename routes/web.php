@@ -207,8 +207,8 @@ Route::middleware(['userlogin'])->group(function () {
         Route::get('/', [MrpCtrlrController::class, 'index'])->name('index');
         Route::get('/data', [MrpCtrlrController::class, 'data'])->name('data');
         Route::post('/store', [MrpCtrlrController::class, 'store'])->name('store');
-        Route::post('/update/{MRP_CTRL}/{WRK_CNTR}', [MrpCtrlrController::class, 'update'])->name('update');
-        Route::post('/destroy/{MRP_CTRL}/{WRK_CNTR}', [MrpCtrlrController::class, 'destroy'])->name('destroy');
+        Route::post('/update/{WRK_CNTR}', [MrpCtrlrController::class, 'update'])->name('update');
+        Route::post('/destroy/{WRK_CNTR}', [MrpCtrlrController::class, 'destroy'])->name('destroy');
         Route::post('/import', [MrpCtrlrController::class, 'import'])->name('import');
     });
 

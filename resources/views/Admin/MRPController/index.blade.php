@@ -96,6 +96,8 @@ $(function(){
 
     // Edit Data
     window.editData = function(row){
+        // Reset error setiap kali modal edit dibuka
+        $('#errorEdit').addClass('d-none').html('');
         $('#modalEdit input[name="MRP_CTRL_OLD"]').val(row.MRP_CTRL);
         $('#modalEdit input[name="WRK_CNTR_OLD"]').val(row.WRK_CNTR);
         $('#modalEdit input[name="MRP_CTRL"]').val(row.MRP_CTRL);
@@ -108,9 +110,8 @@ $(function(){
     $('#formEdit').submit(function(e){
         e.preventDefault();
         $('#errorEdit').addClass('d-none').html('');
-        var oldCtrl = $('#modalEdit input[name="MRP_CTRL_OLD"]').val();
         var oldWrk = $('#modalEdit input[name="WRK_CNTR_OLD"]').val();
-        $.post("{{ url('admin/mrp-ctrlr/update') }}/"+oldCtrl+"/"+oldWrk, $(this).serialize(), function(){
+        $.post("{{ url('admin/mrp-ctrlr/update') }}/"+oldWrk, $(this).serialize(), function(){
             $('#modalEdit').modal('hide');
             table.ajax.reload();
             Swal.fire({
@@ -131,6 +132,11 @@ $(function(){
         });
     });
 
+    // Reset error saat input berubah di modal edit
+    $('#modalEdit input').on('input', function() {
+        $('#errorEdit').addClass('d-none').html('');
+    });
+
     // Hapus Data
     window.deleteData = function(row){
         $('#formHapus input[name="MRP_CTRL_HAPUS"]').val(row.MRP_CTRL);
@@ -146,9 +152,8 @@ $(function(){
 
     $('#formHapus').submit(function(e){
         e.preventDefault();
-        var mrp = $('#formHapus input[name="MRP_CTRL_HAPUS"]').val();
         var wrk = $('#formHapus input[name="WRK_CNTR_HAPUS"]').val();
-        $.post("{{ url('admin/mrp-ctrlr/destroy') }}/"+mrp+"/"+wrk, function(){
+        $.post("{{ url('admin/mrp-ctrlr/destroy') }}/"+wrk, function(){
             $('#modalHapus').modal('hide');
             table.ajax.reload();
         }).fail(function(xhr){

@@ -19,7 +19,7 @@ class MrpCtrlrController extends Controller
 
     public function data(Request $request)
     {
-        $data = Mina2MrpCtrlr::query();
+        $data = Mina2MrpCtrlr::orderByRaw('MRP_CTRL ASC, WRK_CNTR ASC')->get();
 
         return DataTables::of($data)
             ->addIndexColumn()
@@ -41,12 +41,20 @@ class MrpCtrlrController extends Controller
             'PLANT'    => 'required|max:5',
         ]);
 
+        // Cek duplikat WRK_CNTR
+        if (Mina2MrpCtrlr::where('WRK_CNTR', $validated['WRK_CNTR'])->exists()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'WRK_CNTR sudah digunakan!'
+            ], 422);
+        }
+
         Mina2MrpCtrlr::create($validated);
 
         return response()->json(['success' => true, 'message' => 'Data berhasil disimpan.']);
     }
 
-    public function update(Request $request, $mrp_ctrl, $wrk_cntr)
+    public function update(Request $request, $wrk_cntr)
     {
         $validated = $request->validate([
             'MRP_CTRL' => 'required|max:4',
@@ -55,35 +63,30 @@ class MrpCtrlrController extends Controller
             'PLANT'    => 'required|max:5',
         ]);
 
-        // Cek apakah kombinasi baru sudah ada (selain data yang sedang diedit)
-        $exists = Mina2MrpCtrlr::where('MRP_CTRL', $validated['MRP_CTRL'])
-            ->where('WRK_CNTR', $validated['WRK_CNTR'])
-            ->where(function($q) use ($mrp_ctrl, $wrk_cntr) {
-                $q->where('MRP_CTRL', '!=', $mrp_ctrl)
-                  ->orWhere('WRK_CNTR', '!=', $wrk_cntr);
-            })
+        // Cek duplikat WRK_CNTR baru (kecuali milik sendiri)
+        $exists = Mina2MrpCtrlr::where('WRK_CNTR', $validated['WRK_CNTR'])
+            ->where('WRK_CNTR', '!=', $wrk_cntr)
             ->exists();
 
         if ($exists) {
-            return response()->json(['success' => false, 'message' => 'Kombinasi MRP_CTRL dan WRK_CNTR sudah digunakan!'], 422);
+            return response()->json([
+                'success' => false,
+                'message' => 'WRK_CNTR sudah digunakan!'
+            ], 422);
         }
 
-        $row = Mina2MrpCtrlr::where('MRP_CTRL', $mrp_ctrl)
-                ->where('WRK_CNTR', $wrk_cntr)
-                ->firstOrFail();
-
-        // Update semua field, termasuk jika primary key berubah
+        $row = Mina2MrpCtrlr::where('WRK_CNTR', $wrk_cntr)->firstOrFail();
         $row->update($validated);
 
-        return response()->json(['success' => true, 'message' => 'Data berhasil diperbarui.']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil diperbarui.'
+        ]);
     }
 
-    public function destroy($mrp_ctrl, $wrk_cntr)
+    public function destroy($wrk_cntr)
     {
-        Mina2MrpCtrlr::where('MRP_CTRL', $mrp_ctrl)
-            ->where('WRK_CNTR', $wrk_cntr)
-            ->delete();
-
+        Mina2MrpCtrlr::where('WRK_CNTR', $wrk_cntr)->delete();
         return response()->json(['success' => true, 'message' => 'Data berhasil dihapus.']);
     }
 
