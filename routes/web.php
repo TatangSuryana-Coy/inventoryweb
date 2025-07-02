@@ -15,7 +15,8 @@ use App\Http\Controllers\Admin\{
     MerkController,
     SatuanController,
     PartLabelController,
-    MrpCtrlrController
+    MrpCtrlrController,
+    WorkDayController
 };
 use App\Http\Controllers\Master\{
     AksesController,
@@ -187,7 +188,7 @@ Route::middleware(['userlogin'])->group(function () {
     });
 
     // Part Label (ms_part_label)
-    Route::prefix('admin/ms-label')->group(function() {
+    Route::prefix('admin/ms-label')->group(function () {
         Route::get('/', [PartLabelController::class, 'index'])->name('MasterLabel.index');
         Route::get('/getdata', [PartLabelController::class, 'getdata'])->name('MasterLabel.getdata');
         Route::post('/store', [PartLabelController::class, 'store'])->name('MasterLabel.store');
@@ -203,7 +204,7 @@ Route::middleware(['userlogin'])->group(function () {
     Route::get('/admin/mina2coois/status-summary', [Mina2CooisController::class, 'statusSummary'])->name('mina2coois.statusSummary');
 
     // MRP Controller (MRP Ctrlr)
-    Route::prefix('admin/mrp-ctrlr')->name('mrpctrlr.')->group(function() {
+    Route::prefix('admin/mrp-ctrlr')->name('mrpctrlr.')->group(function () {
         Route::get('/', [MrpCtrlrController::class, 'index'])->name('index');
         Route::get('/data', [MrpCtrlrController::class, 'data'])->name('data');
         Route::post('/store', [MrpCtrlrController::class, 'store'])->name('store');
@@ -212,5 +213,13 @@ Route::middleware(['userlogin'])->group(function () {
         Route::post('/import', [MrpCtrlrController::class, 'import'])->name('import');
     });
 
+    // Work Day
+    Route::prefix('admin/workday')->name('workday.')->group(function () {
+        Route::get('/', [WorkDayController::class, 'index'])->name('index');
+        Route::get('/data', [WorkDayController::class, 'data'])->name('data');
+        Route::post('/store', [WorkDayController::class, 'store'])->name('store');
+        Route::post('/update/{WorkDate}', [WorkDayController::class, 'update'])->name('update');
+        Route::post('/destroy/{WorkDate}', [WorkDayController::class, 'destroy'])->name('destroy');
+        Route::post('/import', [WorkDayController::class, 'import'])->name('import');
+    });
 });
-
