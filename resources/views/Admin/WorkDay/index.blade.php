@@ -10,8 +10,12 @@
             <div class="card-header justify-content-between">
                 <h3 class="card-title">Data</h3>
                 <div>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah">Tambah Data</button>
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalImportExcel">Upload Excel</button>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah">
+                        <i class="fa fa-plus"></i> Tambah Data
+                    </button>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalImportExcel">
+                        <i class="fa fa-upload"></i> Upload Excel
+                    </button>
                 </div>
             </div>
             <div class="card-body">

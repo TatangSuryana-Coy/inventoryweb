@@ -18,10 +18,10 @@
                 <h3 class="card-title">Data</h3>
                 <div>
                     <a class="modal-effect btn btn-primary" data-bs-effect="effect-super-scaled" data-bs-toggle="modal" href="#modalTambah">
-                        Tambah Data <i class="fa fa-plus"></i>
+                        <i class="fa fa-plus"></i> Tambah Data
                     </a>
                     <a class="modal-effect btn btn-success" data-bs-effect="effect-super-scaled" data-bs-toggle="modal" href="#modalImportExcel">
-                        Upload Excel <i class="fa fa-upload"></i>
+                        <i class="fa fa-upload"></i> Upload Excel
                     </a>
                 </div>
             </div>
@@ -77,9 +77,11 @@
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success" id="btnImport">
                         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                        Import Excel
+                        <i class="fa fa-upload"></i> Import Excel
                     </button>
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                        <i class="fa fa-times"></i> Batal
+                    </button>
                 </div>
             </form>
         </div>
@@ -95,35 +97,82 @@
             processing: true,
             serverSide: true,
             ajax: "{{ route('MasterLabel.getdata') }}",
-            columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                { data: 'WERKS', name: 'WERKS' },
-                { data: 'MATNR', name: 'MATNR' },
-                { data: 'MAKTX', name: 'MAKTX' },
-                { data: 'ARBPL', name: 'ARBPL' },
-                { data: 'VORNR', name: 'VORNR' },
-                { data: 'EXTWG', name: 'EXTWG' },
-                { data: 'LTXA1W', name: 'LTXA1W' },
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'WERKS',
+                    name: 'WERKS'
+                },
+                {
+                    data: 'MATNR',
+                    name: 'MATNR'
+                },
+                {
+                    data: 'MAKTX',
+                    name: 'MAKTX'
+                },
+                {
+                    data: 'ARBPL',
+                    name: 'ARBPL'
+                },
+                {
+                    data: 'VORNR',
+                    name: 'VORNR'
+                },
+                {
+                    data: 'EXTWG',
+                    name: 'EXTWG'
+                },
+                {
+                    data: 'LTXA1W',
+                    name: 'LTXA1W'
+                },
                 {
                     data: 'ZZP_NUM_ENT',
                     name: 'ZZP_NUM_ENT',
                     render: function(data) {
                         if (data == null) return '';
-                        // Tampilkan 2 digit di belakang koma, hilangkan trailing nol
-                        return parseFloat(data).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+                        return parseFloat(data).toLocaleString('en-US', {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 2
+                        });
                     }
                 },
-                { data: 'BUN', name: 'BUN' },
-                { data: 'MRP', name: 'MRP' },
-                { data: 'PLANT', name: 'PLANT' },
-                { data: 'LNNM', name: 'LNNM' },
-                { data: 'VSBL', name: 'VSBL' },
-                { data: 'action', name: 'action', orderable: false, searchable: false },
+                {
+                    data: 'BUN',
+                    name: 'BUN'
+                },
+                {
+                    data: 'MRP',
+                    name: 'MRP'
+                },
+                {
+                    data: 'PLANT',
+                    name: 'PLANT'
+                },
+                {
+                    data: 'LNNM',
+                    name: 'LNNM'
+                },
+                {
+                    data: 'VSBL',
+                    name: 'VSBL'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                },
             ]
         });
 
         // Submit tambah
-        $('#formTambah').submit(function(e){
+        $('#formTambah').submit(function(e) {
             e.preventDefault();
             var form = $(this);
             var btn = $('#btnSimpanTambah');
@@ -135,10 +184,10 @@
                 url: form.attr('action'),
                 method: 'POST',
                 data: form.serialize(),
-                success: function(res){
+                success: function(res) {
                     btn.attr('disabled', false);
                     spinner.addClass('d-none');
-                    if(res.status === 'success'){
+                    if (res.status === 'success') {
                         $('#modalTambah').modal('hide');
                         table.ajax.reload();
                         form[0].reset();
@@ -151,12 +200,12 @@
                         $('#errorTambah').removeClass('d-none').html(res.msg || 'Gagal tambah data');
                     }
                 },
-                error: function(xhr){
+                error: function(xhr) {
                     btn.attr('disabled', false);
                     spinner.addClass('d-none');
-                    if(xhr.status === 422 && xhr.responseJSON.errors){
+                    if (xhr.status === 422 && xhr.responseJSON.errors) {
                         let pesan = '';
-                        $.each(xhr.responseJSON.errors, function(key, val){
+                        $.each(xhr.responseJSON.errors, function(key, val) {
                             pesan += val[0] + '<br>';
                         });
                         $('#errorTambah').removeClass('d-none').html(pesan);
@@ -168,7 +217,7 @@
         });
 
         // Submit edit
-        $('#formEdit').submit(function(e){
+        $('#formEdit').submit(function(e) {
             e.preventDefault();
             var form = $(this);
             var btn = $('#btnSimpanEdit');
@@ -181,10 +230,10 @@
                 url: "{{ url('admin/ms-label/update') }}/" + matnr,
                 method: 'PUT',
                 data: form.serialize(),
-                success: function(res){
+                success: function(res) {
                     btn.attr('disabled', false);
                     spinner.addClass('d-none');
-                    if(res.status === 'success'){
+                    if (res.status === 'success') {
                         $('#modalEdit').modal('hide');
                         table.ajax.reload();
                         Swal.fire({
@@ -196,12 +245,12 @@
                         $('#errorEdit').removeClass('d-none').html(res.msg || 'Gagal update data');
                     }
                 },
-                error: function(xhr){
+                error: function(xhr) {
                     btn.attr('disabled', false);
                     spinner.addClass('d-none');
-                    if(xhr.status === 422 && xhr.responseJSON.errors){
+                    if (xhr.status === 422 && xhr.responseJSON.errors) {
                         let pesan = '';
-                        $.each(xhr.responseJSON.errors, function(key, val){
+                        $.each(xhr.responseJSON.errors, function(key, val) {
                             pesan += val[0] + '<br>';
                         });
                         $('#errorEdit').removeClass('d-none').html(pesan);
@@ -213,14 +262,16 @@
         });
 
         // Submit hapus
-        $('#btnHapus').click(function(){
+        $('#btnHapus').click(function() {
             var id = $('#idHapus').val();
             $.ajax({
                 url: "{{ url('admin/ms-label/destroy') }}/" + id,
                 method: 'DELETE',
-                data: {_token: '{{ csrf_token() }}'},
-                success: function(res){
-                    if(res.status === 'success'){
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(res) {
+                    if (res.status === 'success') {
                         $('#modalHapus').modal('hide');
                         table.ajax.reload();
                         Swal.fire({
@@ -236,7 +287,7 @@
                         });
                     }
                 },
-                error: function(xhr){
+                error: function(xhr) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal!',
@@ -247,11 +298,11 @@
         });
 
         // Validasi form import
-        $('#formImport').submit(function(e){
+        $('#formImport').submit(function(e) {
             var fileInput = $(this).find('input[type="file"]')[0];
             var filePath = fileInput.value;
             var allowedExtensions = /(\.xls|\.xlsx)$/i;
-            if(!allowedExtensions.exec(filePath)){
+            if (!allowedExtensions.exec(filePath)) {
                 $('#errorImport').removeClass('d-none').html('Hanya file Excel (.xls, .xlsx) yang diperbolehkan!');
                 fileInput.value = '';
                 e.preventDefault();
@@ -266,7 +317,7 @@
         var form = $('#formEdit');
         $('#errorEdit').addClass('d-none').html('');
         for (const key in data) {
-            form.find('[name="'+key+'"]').val(data[key]);
+            form.find('[name="' + key + '"]').val(data[key]);
         }
         $('#modalEdit').modal('show');
     }
@@ -274,28 +325,29 @@
     // Isi modal hapus
     function hapusPartLabel(id, name) {
         $('#idHapus').val(id);
-        $('#infoHapus').html('<b>'+id+'</b> - <b>'+name+'</b>');
+        $('#infoHapus').html('<b>' + id + '</b> - <b>' + name + '</b>');
         $('#modalHapus').modal('show');
     }
 </script>
 
 @if(session('import_result'))
-    <script>
-        $(document).ready(function() {
-            @if(session('import_result.success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Import Berhasil!',
-                    text: 'Jumlah baris berhasil diimport: {{ session('import_result.count') }}'
-                });
-            @else
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Import Gagal!',
-                    text: '{{ session('import_result.message') }}'
-                });
-            @endif
+<script>
+    $(document).ready(function() {
+        @if(session('import_result.success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Import Berhasil!',
+            text: "Jumlah baris berhasil diimport: {{ session('import_result.count') }}"
         });
-    </script>
+        @else
+        Swal.fire({
+            icon: 'error',
+            title: 'Import Gagal!',
+            text: '{{ session('
+            import_result.message ') }}'
+        });
+        @endif
+    });
+</script>
 @endif
 @endsection

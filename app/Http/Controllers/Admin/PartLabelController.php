@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
-use Excel; // Untuk maatwebsite/excel v1.x
+use Maatwebsite\Excel\Facades\Excel; // Untuk maatwebsite/excel v1.x
 
 class PartLabelController extends Controller
 {
@@ -17,18 +18,22 @@ class PartLabelController extends Controller
 
     public function getdata(Request $request)
     {
-        $data = DB::table('ms_part_label')->get()->map(function($row) {
+        $data = DB::table('ms_part_label')->get()->map(function ($row) {
             $row->ZZP_NUM_ENT = round($row->ZZP_NUM_ENT, 2);
             return $row;
         });
         return DataTables::of($data)
             ->addIndexColumn()
-            ->addColumn('action', function($row){
+            ->addColumn('action', function ($row) {
                 $id = $row->MATNR;
                 $name = $row->MAKTX;
                 return '
-                    <button class="btn btn-sm btn-warning" onclick="editPartLabel('.htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8').')"><i class="fa fa-edit"></i></button>
-                    <button class="btn btn-sm btn-danger" onclick="hapusPartLabel(\''.$id.'\', \''.addslashes($name).'\')"><i class="fa fa-trash"></i></button>
+                    <button class="btn btn-sm btn-success" onclick="editPartLabel(' . htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8') . ')">
+                        <i class="fa fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="hapusPartLabel(\'' . $id . '\', \'' . addslashes($name) . '\')">
+                        <i class="fa fa-trash"></i> Hapus
+                    </button>
                 ';
             })
             ->rawColumns(['action'])
@@ -53,10 +58,10 @@ class PartLabelController extends Controller
             'VSBL' => 'nullable|string|max:1',
         ]);
         try {
-            \DB::table('ms_part_label')->insert($validated);
+            DB::table('ms_part_label')->insert($validated);
             return response()->json(['status' => 'success', 'msg' => 'Data berhasil ditambah']);
         } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'msg' => 'Gagal tambah data: '.$e->getMessage()], 500);
+            return response()->json(['status' => 'error', 'msg' => 'Gagal tambah data: ' . $e->getMessage()], 500);
         }
     }
 
@@ -78,10 +83,10 @@ class PartLabelController extends Controller
             'VSBL' => 'nullable|string|max:1',
         ]);
         try {
-            \DB::table('ms_part_label')->where('MATNR', $matnr)->update($validated);
+            DB::table('ms_part_label')->where('MATNR', $matnr)->update($validated);
             return response()->json(['status' => 'success', 'msg' => 'Data berhasil diupdate']);
         } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'msg' => 'Gagal update data: '.$e->getMessage()], 500);
+            return response()->json(['status' => 'error', 'msg' => 'Gagal update data: ' . $e->getMessage()], 500);
         }
     }
 

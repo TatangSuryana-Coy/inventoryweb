@@ -8,7 +8,7 @@ use App\Models\Admin\WorkDay;
 use App\Models\Admin\WorkDayTmp;
 use App\Imports\WorkDayTmpImport;
 use Maatwebsite\Excel\Facades\Excel;
-use DataTables;
+use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 
 class WorkDayController extends Controller
@@ -27,8 +27,8 @@ class WorkDayController extends Controller
         return DataTables::of($data)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $edit = "<a href='javascript:void(0)' class='btn btn-sm btn-primary' onclick='editData(" . json_encode($row) . ")'>Edit</a>";
-                $del  = "<a href='javascript:void(0)' class='btn btn-sm btn-danger' onclick='deleteData(" . json_encode($row) . ")'>Hapus</a>";
+                $edit = "<a href='javascript:void(0)' class='btn btn-sm btn-primary' onclick='editData(" . json_encode($row) . ")'><i class=\"fa fa-edit\"></i> Edit</a>";
+                $del  = "<a href='javascript:void(0)' class='btn btn-sm btn-danger' onclick='deleteData(" . json_encode($row) . ")'><i class=\"fa fa-trash\"></i> Hapus</a>";
                 return $edit . ' ' . $del;
             })
             ->rawColumns(['action'])

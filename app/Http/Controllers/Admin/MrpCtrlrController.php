@@ -24,8 +24,12 @@ class MrpCtrlrController extends Controller
         return DataTables::of($data)
             ->addIndexColumn()
             ->addColumn('action', function($row) {
-                $edit = "<a href='javascript:void(0)' class='btn btn-sm btn-primary' onclick='editData(".json_encode($row).")'>Edit</a>";
-                $del  = "<a href='javascript:void(0)' class='btn btn-sm btn-danger' onclick='deleteData(".json_encode($row).")'>Hapus</a>";
+                $edit = "<a href='javascript:void(0)' class='btn btn-sm btn-warning text-white' onclick='editData(".json_encode($row).")'>
+                            <i class=\"fa fa-edit\"></i> Edit
+                        </a>";
+                $del  = "<a href='javascript:void(0)' class='btn btn-sm btn-danger' onclick='deleteData(".json_encode($row).")'>
+                            <i class=\"fa fa-trash\"></i> Hapus
+                        </a>";
                 return $edit . ' ' . $del;
             })
             ->rawColumns(['action'])
