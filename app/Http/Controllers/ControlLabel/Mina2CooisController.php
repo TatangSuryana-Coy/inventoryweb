@@ -33,7 +33,11 @@ class Mina2CooisController extends Controller
 
         try {
             $import = new Mina2CooisImport();
-            Excel::import($import, $request->file('file'));
+            \Maatwebsite\Excel\Facades\Excel::import($import, $request->file('file'));
+
+            // Jalankan stored procedure setelah import
+            \Illuminate\Support\Facades\DB::statement('EXEC [dbo].[SP_COOIS_AFTER]');
+
             return redirect()->back()->with('success', 'Import berhasil. Jumlah baris: ' . $import->getSuccessCount());
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Import gagal: ' . $e->getMessage());
@@ -42,7 +46,12 @@ class Mina2CooisController extends Controller
     public function statusSummary()
     {
         $statuses = [
-            'Open', 'Close', 'Deleted', 'Delay', 'Next Delay', 'Cost Error'
+            'Open',
+            'Close',
+            'Deleted',
+            'Delay',
+            'Next Delay',
+            'Cost Error'
         ];
         $counts = DB::table('mina2_coois')
             ->selectRaw("SYS_STATUS, COUNT(*) as total")

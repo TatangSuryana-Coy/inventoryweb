@@ -32,7 +32,7 @@ class Mina2CooisImport implements ToCollection
             // Pastikan kolom mat_number ada dan tidak kosong
             if (!isset($data['mat_number']) || empty($data['mat_number'])) continue;
 
-            DB::table('mina2_coois')->updateOrInsert(
+            DB::table('mina2_coois_tmp')->updateOrInsert( // <-- ubah ke _tmp
                 ['MAT_NUMBER' => $data['mat_number']],
                 [
                     'MRP'             => $data['mrp'] ?? null,
